@@ -108,10 +108,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       res
     );
 
-    // ✅ DEBUG: Log cookie setting
-    console.log("Cookie set for user:", user.username);
-    console.log("Response headers:", res.getHeaders());
-
     res.status(200).json({
       success: true,
       message: "Login successful",

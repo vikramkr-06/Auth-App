@@ -11,9 +11,6 @@ export const protect = async (
     // ✅ Get token from cookie
     const token = req.cookies.token;
 
-    console.log('Auth Middleware - Cookies:', req.cookies);
-    console.log('Auth Middleware - Token:', token ? 'Present' : 'Missing');
-
     // Check if token exists
     if (!token) {
       res.status(401).json({
@@ -28,8 +25,6 @@ export const protect = async (
       token,
       process.env.JWT_SECRET as string
     ) as JWTPayload;
-
-    console.log('Auth Middleware - Decoded:', decoded);
 
     // Attach user info to request
     req.user = {

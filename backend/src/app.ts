@@ -43,7 +43,6 @@ const allowedOrigins = [
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
-console.log('Allowed Origins:', allowedOrigins);
 
 const corsOptions = {
   origin: function (origin: string | undefined, callback: Function) {
@@ -52,7 +51,6 @@ const corsOptions = {
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log('Origin not allowed by CORS:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
