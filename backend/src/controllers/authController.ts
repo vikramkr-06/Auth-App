@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
-import User from '../models/User';
-import { generateToken, clearToken } from '../utils/generateToken';
-import { AuthRequest } from '../types';
+import { Request, Response } from "express";
+import User from "../models/User";
+import { generateToken, clearToken } from "../utils/generateToken";
+import { AuthRequest } from "../types";
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -14,7 +14,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     if (!name || !username || !password) {
       res.status(400).json({
         success: false,
-        message: 'Please provide all required fields',
+        message: "Please provide all required fields",
       });
       return;
     }
@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     if (userExists) {
       res.status(400).json({
         success: false,
-        message: 'Username already exists',
+        message: "Username already exists",
       });
       return;
     }
@@ -48,7 +48,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: "User registered successfully",
       user: {
         id: user._id,
         name: user.name,
@@ -56,10 +56,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       },
     });
   } catch (error: any) {
-    console.error('Register Error:', error);
+    console.error("Register Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error during registration',
+      message: error.message || "Server error during registration",
     });
   }
 };
@@ -71,33 +71,30 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
 
-    // Validation
     if (!username || !password) {
       res.status(400).json({
         success: false,
-        message: 'Please provide username and password',
+        message: "Please provide username and password",
       });
       return;
     }
 
-    // Find user and include password field
-    const user = await User.findOne({ username }).select('+password');
+    const user = await User.findOne({ username }).select("+password");
 
     if (!user) {
       res.status(401).json({
         success: false,
-        message: 'Invalid credentials',
+        message: "Invalid credentials",
       });
       return;
     }
 
-    // Check password
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
       res.status(401).json({
         success: false,
-        message: 'Invalid credentials',
+        message: "Invalid credentials",
       });
       return;
     }
@@ -111,9 +108,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       res
     );
 
+    // ✅ DEBUG: Log cookie setting
+    console.log("Cookie set for user:", user.username);
+    console.log("Response headers:", res.getHeaders());
+
     res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       user: {
         id: user._id,
         name: user.name,
@@ -121,10 +122,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       },
     });
   } catch (error: any) {
-    console.error('Login Error:', error);
+    console.error("Login Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error during login',
+      message: error.message || "Server error during login",
     });
   }
 };
@@ -132,19 +133,22 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 // @desc    Logout user
 // @route   POST /api/auth/logout
 // @access  Private
-export const logout = async (_req: AuthRequest, res: Response): Promise<void> => {
+export const logout = async (
+  _req: AuthRequest,
+  res: Response
+): Promise<void> => {
   try {
     clearToken(res);
 
     res.status(200).json({
       success: true,
-      message: 'Logout successful',
+      message: "Logout successful",
     });
   } catch (error: any) {
-    console.error('Logout Error:', error);
+    console.error("Logout Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error during logout',
+      message: error.message || "Server error during logout",
     });
   }
 };
@@ -154,12 +158,12 @@ export const logout = async (_req: AuthRequest, res: Response): Promise<void> =>
 // @access  Private
 export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const user = await User.findById(req.user?.id).select('-password');
+    const user = await User.findById(req.user?.id).select("-password");
 
     if (!user) {
       res.status(404).json({
         success: false,
-        message: 'User not found',
+        message: "User not found",
       });
       return;
     }
@@ -173,10 +177,10 @@ export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
       },
     });
   } catch (error: any) {
-    console.error('Get Me Error:', error);
+    console.error("Get Me Error:", error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Server error',
+      message: error.message || "Server error",
     });
   }
 };
